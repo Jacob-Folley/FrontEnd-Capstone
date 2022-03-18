@@ -1,25 +1,24 @@
 import React from "react"
 import { Route } from "react-router-dom"
 import { Application } from './Application'
-import { EmployerHome } from './components/employerHome'
-import { NavBar } from './components/navbar'
-import { EmployerPost } from './components/employerPost'
-import { EmployerPostings } from './components/postings'
-import { EmployerApplicants } from './components/applicants'
-import { EmployerProfile } from './components/profile'
-import { EmployerSearch } from './components/search'
-// import { ContactModule } from './components/contact/contact'
+import { EmployerHome } from './components/employer/employerHome'
+import { NavBar } from './components/employer/navbar'
+import { EmployerPost } from './components/employer/employerPost'
+import { EmployerPostings } from './components/employer/postings'
+import { EmployerApplicants } from './components/employer/applicants'
+import { EmployerProfile } from './components/employer/profile'
+import { EmployerSearch } from './components/employer/search'
+import { ApplicantJobPosts } from './components/applicants/jobposts'
+import { ApplicantApplied } from './components/applicants/applied'
+import { ApplicantAccepted } from './components/applicants/accepted'
+import { ApplicantProfile } from './components/applicants/profile'
+import { ApplicantNavBar } from './components/applicants/navbar'
 
 const ApplicationViews = () => {
     const employer = localStorage.getItem('isEmployer') == 'true'
     const applicant = localStorage.getItem('isEmployer') == 'false'
     return (
         <>
-
-            <Route exact path="/">
-                <NavBar />
-                <EmployerHome />
-            </Route>
 
             <Route exact path="/post">
                 {
@@ -50,7 +49,12 @@ const ApplicationViews = () => {
                             <NavBar />
                             <EmployerPostings />
                         </>
-                        : ""
+                        :
+                        <>
+                            <ApplicantNavBar />
+                            <ApplicantJobPosts />
+                        </>
+
                 }
             </Route>
 
@@ -65,27 +69,43 @@ const ApplicationViews = () => {
                 }
             </Route>
 
-            <Route exact path="/profile">
+            <Route exact path="/">
                 {
                     employer ?
                         <>
                             <NavBar />
                             <EmployerProfile />
                         </>
-                        : ""
+                        :
+                        <>
+                            <ApplicantNavBar />
+                            <ApplicantProfile />
+                        </>
                 }
             </Route>
 
-            <Route exact path="/mainReact">
-                {/* <MainReact /> */}
+            <Route exact path="/applied">
+                {
+                    employer ?
+                        ""
+                        :
+                        <>
+                            <ApplicantNavBar />
+                            <ApplicantApplied />
+                        </>
+                }
             </Route>
 
-            <Route exact path="/skills">
-                {/* <SkillModule /> */}
-            </Route>
-
-            <Route exact path="/contact">
-                {/* <ContactModule /> */}
+            <Route exact path="/accepted">
+                {
+                    employer ?
+                        ""
+                        :
+                        <>
+                            <ApplicantNavBar />
+                            <ApplicantAccepted />
+                        </>
+                }
             </Route>
 
         </>

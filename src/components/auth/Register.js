@@ -6,21 +6,28 @@ export const Register = () => {
     const firstName = useRef()
     const lastName = useRef()
     const username = useRef()
-    const acctype = useRef()
+    const applicant = useRef()
+    const employer = useRef()
     const password = useRef()
     const verifyPassword = useRef()
     const passwordDialog = useRef()
     const history = useHistory()
+    let type = ""
 
     const handleRegister = (e) => {
         e.preventDefault()
 
         if (password.current.value === verifyPassword.current.value) {
+            if (applicant.current.checked) {
+                type = "Applicant"
+            } else {
+                type = "Employer"
+            }
             const newUser = {
                 "username": username.current.value,
                 "first_name": firstName.current.value,
                 "last_name": lastName.current.value,
-                "acctype": acctype.current.value,
+                "acctype": type,
                 "password": password.current.value
             }
 
@@ -79,9 +86,9 @@ export const Register = () => {
                 <fieldset>
                     <h3>Account Type</h3>
                     Applicant
-                    <input type="checkbox" ref={acctype} name="acctype" value="Applicant" />
+                    <input type="checkbox" ref={applicant} name="applicant" value="Applicant" />
                     Employer
-                    <input type="checkbox" ref={acctype} name="acctype" value="Employer" />
+                    <input type="checkbox" ref={employer} name="employer" value="Employer" />
                 </fieldset>
                 <fieldset style={{
                     textAlign: "center"

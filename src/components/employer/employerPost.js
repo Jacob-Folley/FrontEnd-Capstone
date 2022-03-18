@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
-import { getSkills, createSkill } from "./fetches/skills"
-import { createJobPosting } from "./fetches/jobpostings"
+import { getSkills, createSkill } from "../fetches/skills"
+import { createJobPosting } from "../fetches/jobpostings"
 
 export const EmployerPost = () => {
     const history = useHistory()
