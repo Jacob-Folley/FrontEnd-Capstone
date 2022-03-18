@@ -91,7 +91,7 @@ export const NavBar = () => {
                 <div><Link to={`/post`}>Post</Link></div>
                 <div><Link to={`/postings`}>Postings</Link></div>
                 <div><Link to={`/applicants`}>Applicants</Link></div>
-                <div><Link to={`/profile`}>Profile</Link></div>
+                <div><Link to={`/`}>Profile</Link></div>
 
             </div>
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
-import { getJobPostings } from "./fetches/jobpostings"
+import { getJobPostings } from "../fetches/jobpostings"
 
 export const EmployerPostings = () => {
     const user = parseInt(localStorage.getItem("userId"))

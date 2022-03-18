@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useParams, useHistory } from "react-router-dom"
-import { createCompany, getCompany, getCompanies } from "./fetches/company"
+import { createCompany, getCompany, getCompanies } from "../fetches/company"
 
 export const EmployerProfile = () => {
     const history = useHistory()
