@@ -11,6 +11,8 @@ import { EmployerSearch } from './components/search'
 // import { ContactModule } from './components/contact/contact'
 
 const ApplicationViews = () => {
+    const employer = localStorage.getItem('isEmployer') == 'true'
+    const applicant = localStorage.getItem('isEmployer') == 'false'
     return (
         <>
 
@@ -20,28 +22,58 @@ const ApplicationViews = () => {
             </Route>
 
             <Route exact path="/post">
-                <NavBar />
-                <EmployerPost />
+                {
+                    employer ?
+                        <>
+                            <NavBar />
+                            <EmployerPost />
+                        </>
+                        : ""
+                }
             </Route>
 
             <Route exact path="/search">
-                <NavBar />
-                <EmployerSearch />
+                {
+                    employer ?
+                        <>
+                            <NavBar />
+                            <EmployerSearch />
+                        </>
+                        : ""
+                }
             </Route>
 
             <Route exact path="/postings">
-                <NavBar />
-                <EmployerPostings />
+                {
+                    employer ?
+                        <>
+                            <NavBar />
+                            <EmployerPostings />
+                        </>
+                        : ""
+                }
             </Route>
 
             <Route exact path="/applicants">
-                <NavBar />
-                <EmployerApplicants />
+                {
+                    employer ?
+                        <>
+                            <NavBar />
+                            <EmployerApplicants />
+                        </>
+                        : ""
+                }
             </Route>
 
             <Route exact path="/profile">
-                <NavBar />
-                <EmployerProfile />
+                {
+                    employer ?
+                        <>
+                            <NavBar />
+                            <EmployerProfile />
+                        </>
+                        : ""
+                }
             </Route>
 
             <Route exact path="/mainReact">

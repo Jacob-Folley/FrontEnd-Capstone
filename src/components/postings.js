@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom"
 import { getJobPostings } from "./fetches/jobpostings"
 
 export const EmployerPostings = () => {
-    const user = parseInt(localStorage.getItem("lu_token"))
+    const user = parseInt(localStorage.getItem("userId"))
 
     // Use States
     //-------------------------------------------------------------------------------------------------------------------
@@ -26,7 +26,7 @@ export const EmployerPostings = () => {
 
     // Functions/Objects
     //-------------------------------------------------------------------------------------------------------------------
-    
+
 
 
     //-------------------------------------------------------------------------------------------------------------------
@@ -35,10 +35,12 @@ export const EmployerPostings = () => {
         <>
             <h1>Employer Postings</h1>
             {
-                postings.map((post) => { 
-                   return [ <h3>{post.title}</h3>,
-                    <p>{post.description}</p>,
-                    <h3>{post.skills}</h3> ]
+                postings.map((post) => {
+                    if (post.employer.id == user) {
+                        return [<h3>{post.title}</h3>,
+                        <p>{post.description}</p>,
+                        <h3>{post.skills}</h3>]
+                    }
                 })
             }
 

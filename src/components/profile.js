@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react"
 import { useParams, useHistory } from "react-router-dom"
-import { createCompany, getCompany } from "./fetches/company"
+import { createCompany, getCompany, getCompanies } from "./fetches/company"
 
 export const EmployerProfile = () => {
     const history = useHistory()
+    const user = parseInt(localStorage.getItem("userId"))
     // Use States
     //-------------------------------------------------------------------------------------------------------------------
 
@@ -11,18 +12,39 @@ export const EmployerProfile = () => {
         companyName: "",
         description: ""
     })
-    const [company, setCompany] = useState({})
     const [created, setCreated] = useState(false)
+    const [companies, setCompanies] = useState([])
+    const [companyProfile, setCompanyProfile] = useState({})
+    const [company, setCompany] = useState({})
 
     // Use Effects
     //-------------------------------------------------------------------------------------------------------------------
 
+    //FIND COMPANY THAT MATCHES EMPLOYER; IF FOUND DISPLAY DATA : ELSE DISPLAY FORM
+
     useEffect(
         () => {
-            getCompany(1) //FIX: GET CURRENT USER ID
+            getCompanies()
+                .then((data) => {
+                    setCompanies(data)
+                })
+        },
+        []
+    )
+
+    useEffect(
+        () => {
+            setCompanyProfile(findCompany())
+        },
+        []
+    )
+
+    useEffect(
+        () => {
+            getCompany(companyProfile.id)
                 .then((data) => {
                     setCompany(data)
-                    if (company) {
+                    if (company.name) {
                         setCreated(true)
                     }
                 })
@@ -41,14 +63,21 @@ export const EmployerProfile = () => {
         setProfile(copy)
     }
 
+    const findCompany = () => {
+        const foundCompany = companies.filter((comp) => {
+            return comp.employer?.id == user
+        })
+        return foundCompany
+    }
+
 
     //-------------------------------------------------------------------------------------------------------------------
 
     return (
         <>
             <h1>Employer Profile</h1>
-            {console.log(created)}
             {
+
                 created ? 
                 [<h1>{company.name}</h1>, <p>{company.description}</p>]
                 : 
