@@ -15,8 +15,7 @@ import { ApplicantProfile } from './components/applicants/profile'
 import { ApplicantNavBar } from './components/applicants/navbar'
 
 const ApplicationViews = () => {
-    const employer = localStorage.getItem('isEmployer') == 'true'
-    const applicant = localStorage.getItem('isEmployer') == 'false'
+    const employer = localStorage.getItem('isEmployer')
     return (
         <>
 
