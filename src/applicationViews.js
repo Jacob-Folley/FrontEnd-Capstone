@@ -15,14 +15,13 @@ import { ApplicantProfile } from './components/applicants/profile'
 import { ApplicantNavBar } from './components/applicants/navbar'
 
 const ApplicationViews = () => {
-    const employer = localStorage.getItem('isEmployer') == 'true'
-    const applicant = localStorage.getItem('isEmployer') == 'false'
+    const employer = localStorage.getItem('isEmployer') 
     return (
         <>
 
             <Route exact path="/post">
                 {
-                    employer ?
+                    employer == "true" ?
                         <>
                             <NavBar />
                             <EmployerPost />
@@ -33,7 +32,7 @@ const ApplicationViews = () => {
 
             <Route exact path="/search">
                 {
-                    employer ?
+                    employer == "true" ?
                         <>
                             <NavBar />
                             <EmployerSearch />
@@ -44,7 +43,7 @@ const ApplicationViews = () => {
 
             <Route exact path="/postings">
                 {
-                    employer ?
+                    employer == "true" ?
                         <>
                             <NavBar />
                             <EmployerPostings />
@@ -60,7 +59,7 @@ const ApplicationViews = () => {
 
             <Route exact path="/applicants">
                 {
-                    employer ?
+                    employer == "true" ?
                         <>
                             <NavBar />
                             <EmployerApplicants />
@@ -71,7 +70,7 @@ const ApplicationViews = () => {
 
             <Route exact path="/">
                 {
-                    employer ?
+                    employer == "true" ?
                         <>
                             <NavBar />
                             <EmployerProfile />
@@ -86,7 +85,7 @@ const ApplicationViews = () => {
 
             <Route exact path="/applied">
                 {
-                    employer ?
+                    employer == "true" ?
                         ""
                         :
                         <>
@@ -98,7 +97,7 @@ const ApplicationViews = () => {
 
             <Route exact path="/accepted">
                 {
-                    employer ?
+                    employer == "true" ?
                         ""
                         :
                         <>

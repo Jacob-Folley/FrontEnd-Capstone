@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 
 export const ApplicantAccepted = () => {
-    const user = parseInt(localStorage.getItem("lu_token"))
+    const user = parseInt(localStorage.getItem("userId"))
 
     // Use States
     //-------------------------------------------------------------------------------------------------------------------
