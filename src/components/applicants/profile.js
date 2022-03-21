@@ -104,7 +104,7 @@ export const ApplicantProfile = () => {
 
     return (
         <>
-            <h1>Employer Profile</h1>
+            <h1>Applicant Profile</h1>
             {
 
                 created ? 

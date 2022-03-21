@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useParams, useHistory } from "react-router-dom"
 import { getJobPostings } from "../fetches/jobpostings"
-import { createApplied } from "../fetches/applied"
+import { createApplied, getApplied } from "../fetches/applied"
 
 export const ApplicantJobPosts = () => {
     const user = parseInt(localStorage.getItem("userId"))
@@ -11,6 +11,8 @@ export const ApplicantJobPosts = () => {
     //-------------------------------------------------------------------------------------------------------------------
 
     const [posts, setPosts] = useState([])
+    const [userApplied, setApplied] = useState([])
+    const [currentApplication, setApplication] = useState([])
 
     // Use Effects
     //-------------------------------------------------------------------------------------------------------------------
@@ -25,10 +27,29 @@ export const ApplicantJobPosts = () => {
         []
     )
 
+    useEffect(
+        () => {
+            getApplied()
+                .then((data) => {
+                    setApplied(data)
+                })
+        },
+        []
+    )
+
+    useEffect(
+        () => {
+            setApplication(userApplied.filter((app) => {
+                return app.applicant.id == user
+            }))
+        },
+        [userApplied]
+    )
+
 
     // Functions/Objects
     //-------------------------------------------------------------------------------------------------------------------
-    
+
 
 
     //-------------------------------------------------------------------------------------------------------------------
@@ -38,27 +59,36 @@ export const ApplicantJobPosts = () => {
             <h1>Applicant Job Posts</h1>
             {
                 posts.map((post) => {
+                    const found = currentApplication.find((obj) => {
+                        return post.id == obj.posting.id
+                    })
                     return (
                         <>
-                        <h2>{post.title}</h2>
-                        <p>{post.description}</p>
-                        <p></p>
-                        <h3>{post.employer?.username}</h3>
-                        <button type="submit"
-                        onClick={evt => {
-                            // Prevent form from being submitted
-                            evt.preventDefault()
+                            {found ? ""
+                            :
+                            <>
+                                <h2>{post.title}</h2>
+                                <p>{post.description}</p>
+                                <p></p>
+                                <h3>{post.employer?.username}</h3>
+                        
+                                <button type="submit"
+                                    onClick={evt => {
+                                        // Prevent form from being submitted
+                                        evt.preventDefault()
 
-                            const apply = {
-                                posting: post.id,
-                                applicant: user
-                            }
+                                        const apply = {
+                                            posting: post.id,
+                                            applicant: user
+                                     }
 
-                            // Send POST request to your API
-                            createApplied(apply)
-                                .then(() => history.push("/postings"))
-                        }}
-                        className="btn btn-primary">apply</button>
+                                        // Send POST request to your API
+                                        createApplied(apply)
+                                            .then(() => history.push("/postings")) //REFRESH PAGE AFTER APPLY
+                                    }}
+                                    className="btn btn-primary">apply</button>
+                                    </>
+                                }
                         </>
                     )
                 })

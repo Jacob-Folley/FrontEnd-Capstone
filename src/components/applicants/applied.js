@@ -4,7 +4,7 @@ import { getApplied } from "../fetches/applied"
 
 export const ApplicantApplied = () => {
     const user = parseInt(localStorage.getItem("userId"))
-
+    console.log(user)
     // Use States
     //-------------------------------------------------------------------------------------------------------------------
 
@@ -26,11 +26,11 @@ export const ApplicantApplied = () => {
 
     useEffect(
         () => {
-            setMyApplied(applied.filter((obj) => {
-                return obj.applicant == user
+            setMyApplied(applied.filter((app) => {
+                return app.applicant.id == user
             }))
         },
-        []
+        [applied]
     )
 
 
@@ -48,7 +48,8 @@ export const ApplicantApplied = () => {
                 myApplied.map((applied) => {
                     return (
                         <>
-                            <h2>{applied.posting}</h2>
+                            <h1>{applied.posting.title}</h1>
+                            <p>{applied.posting.description}</p>
                         </>
                     )
                 })

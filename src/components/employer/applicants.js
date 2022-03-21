@@ -1,40 +1,21 @@
 import React, { useEffect, useState } from "react"
 import { useHistory, useParams } from "react-router-dom"
-import { getApplied } from "../fetches/applied"
+import { deleteApplied } from "../fetches/applied"
 import { getJobPostings } from "../fetches/jobpostings"
+import { createAccepted, getAccepted } from "../fetches/accepted"
 
 export const EmployerApplicants = () => {
     const user = parseInt(localStorage.getItem("userId"))
     // Use States
     //-------------------------------------------------------------------------------------------------------------------
-
-    const [applicants, setApplicants ] = useState([])
     const [jobpostings, setJobPostings] = useState([])
-    const [myposts, setMyPosts ] = useState([])
-    const [applied, setApplied] = useState([])
+    const [myposts, setMyPosts] = useState([])
+    const [accepted, setAccepted] = useState([])
+    const [myAccepted, setMyAccepted] = useState([])
+    const history = useHistory()
 
     // Use Effects
     //-------------------------------------------------------------------------------------------------------------------
-
-    useEffect(
-        () => {
-            getApplied()
-                .then((data) => {
-                    setApplicants(data)
-                })
-        },
-        []
-    )
-
-    useEffect(
-        () => {
-            setMyPosts(jobpostings.filter((post) => {
-                return post.employer?.id == user
-            }))
-        },
-        []
-    )
-
     useEffect(
         () => {
             getJobPostings()
@@ -47,20 +28,40 @@ export const EmployerApplicants = () => {
 
     useEffect(
         () => {
-            setApplied(myposts.map((post) => {
-                const applicantsFiltered = applicants.filter((applicant) => {
-                    return applicant.posting == post.id
+            if (jobpostings.length > 0) {
+                setMyPosts(jobpostings.filter((post) => {
+                    return post.employer?.id == user
+                }))
+            }
+        },
+        [jobpostings]
+    )
+
+    useEffect(
+        () => {
+            getAccepted()
+                .then((data) => {
+                    setAccepted(data)
                 })
-                return applicantsFiltered
-            }))
         },
         []
+    )
+
+    useEffect(
+        () => {
+            if (accepted.length > 0) {
+                setMyAccepted(accepted.filter((post) => {
+                    return post.posting?.employer == user
+                }))
+            }
+        },
+        [accepted]
     )
 
 
     // Functions/Objects
     //-------------------------------------------------------------------------------------------------------------------
-        
+
 
     //-------------------------------------------------------------------------------------------------------------------
 
@@ -68,13 +69,70 @@ export const EmployerApplicants = () => {
         <>
             <h1>Employer Applicants</h1>
 
-           
             {
-                applied.map((applicant) => { 
-                   return [ <h3>{applicant.posting}</h3>,
-                    <p>{applicant.applicant}</p> ]
+                myposts.map((post) => {
+                    return (
+                        <>
+                            <h2>{post.title}</h2>
+                            <h3>Applied</h3>
+                            {
+                                post.applications.map((app) => {
+                                    console.log(app)
+                                    return (
+                                        <>
+                                        {
+                                            (app.applicant.isRejected || app.applicant.isAccepted) ? ""
+                                                :
+                                                <>
+                                                    <p>{app.applicant.first_name + " " + app.applicant.last_name}</p>
+                                                    <button type="submit"
+                                                        onClick={evt => {
+                                                            // Prevent form from being submitted
+                                                            evt.preventDefault()
+
+                                                            const accepted = {
+                                                                posting: post.id,
+                                                                applicant: app.applicant.id
+                                                            }
+
+                                                            // Send POST request to your API
+                                                            createAccepted(accepted)
+                                                                .then(() => deleteApplied(app.id))
+                                                                .then(() => {history.push("/applicants")}) //REFRESH PAGE AFTER APPLY
+                                                        }}
+                                                        className="btn btn-primary">accept</button>
+
+                                                    <button type="submit"
+                                                        onClick={evt => {
+                                                            // Prevent form from being submitted
+                                                            evt.preventDefault()
+
+                                                            // Send POST request to your API
+                                                            deleteApplied(app.id)
+                                                                .then(() => history.push("/applicants")) //REFRESH PAGE AFTER APPLY
+                                                        }}
+                                                        className="btn btn-primary">deny</button>
+                                                </>
+                                            }
+                                            </>
+                                    )
+                                })
+                            }
+                            <h3>Accepted</h3>
+                            {
+                                myAccepted.map((post) => {
+                                    return (
+                                        <>
+                                        <p>{post.applicant.first_name + " " + post.applicant.last_name}</p>
+                                        </>
+                                    )
+                                })
+                            }
+                        </>
+                    )
                 })
             }
+
         </>
 
     )
