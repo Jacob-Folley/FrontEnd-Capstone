@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react"
 import { useParams, useHistory } from "react-router-dom"
 import { createResume, getResume, getResumes } from "../fetches/resume"
+import { getSkills, createSkill } from "../fetches/skills"
+import 'animate.css';
 
 export const ApplicantProfile = () => {
     const history = useHistory()
     const user = parseInt(localStorage.getItem("userId"))
+
     // Use States
     //-------------------------------------------------------------------------------------------------------------------
 
     const [profile, setProfile] = useState({
-        resume: "",
-        skills: {}
+        applicant: user,
+        resume: {},
+        skills: []
     })
     const [created, setCreated] = useState(false)
     const [resumes, setResumes] = useState([])
@@ -18,7 +22,9 @@ export const ApplicantProfile = () => {
     const [resume, setResume] = useState({})
 
     const [selectedFile, setSelectedFile] = useState();
-	const [isFilePicked, setIsFilePicked] = useState(false);
+    const [isFilePicked, setIsFilePicked] = useState(false);
+    const [skills, setSkills] = useState([])
+    const [image, setImage] = useState({})
 
     // Use Effects
     //-------------------------------------------------------------------------------------------------------------------
@@ -55,13 +61,34 @@ export const ApplicantProfile = () => {
         []
     )
 
+    useEffect(
+        () => {
+            getSkills()
+                .then((data) => {
+                    setSkills(data)
+                })
+        },
+        []
+    )
+
+
 
     // Functions/Objects
     //-------------------------------------------------------------------------------------------------------------------
-    
+
     const changeFormState = (domEvent) => {
         const copy = { ...profile }
-        copy[domEvent.target.name] = domEvent.target.value
+
+        const check = profile.skills.find((obj) => {
+            return obj == domEvent.target.value
+        })
+
+        if (check) {
+            const num = profile.skills.indexOf(check)
+            copy[domEvent.target.name].splice(num, 1)
+        } else {
+            copy[domEvent.target.name].push(domEvent.target.value)
+        }
 
         setProfile(copy)
     }
@@ -73,89 +100,66 @@ export const ApplicantProfile = () => {
         return foundApplicant
     }
 
-    const changeHandler = (event) => {
-		setSelectedFile(event.target.files[0]);
-		setIsFilePicked(true);
-	};
+    const getBase64 = (file, callback) => {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => callback(reader.result));
+        reader.readAsDataURL(file);
+    }
+    
+    const createResumeImageString = (event) => {
+        getBase64(event.target.files[0], (base64ImageString) => {
+            console.log("Base64 of file is", base64ImageString);
+            const copy = { ...profile }
+            copy.resume = base64ImageString
 
-	const handleSubmission = () => {
-		const formData = new FormData();
-
-		formData.append('File', selectedFile);
-
-		// fetch(
-		// 	'https://freeimage.host/api/1/upload?key=<YOUR_API_KEY>',
-		// 	{
-		// 		method: 'POST',
-		// 		body: formData,
-		// 	}
-		// )
-		// 	.then((response) => response.json())
-		// 	.then((result) => {
-		// 		console.log('Success:', result);
-		// 	})
-		// 	.catch((error) => {
-		// 		console.error('Error:', error);
-		// 	});
-
-	};
+            setProfile(copy)
+    
+            // Update a component state variable to the value of base64ImageString
+        });
+    }
 
     //-------------------------------------------------------------------------------------------------------------------
 
     return (
         <>
-            <h1>Applicant Profile</h1>
-            {
+            <div className="mainContainer">
+                {
 
-                created ? 
-                [<h1>{resume.resume}</h1>, <p>{resume.skills}</p>]
-                : 
-                <section className="ProfileForm">
-                <form>
-                <div>
-			<input type="file" name="file" onChange={changeHandler} />
-			{isFilePicked ? (
-				<div>
-					<p>Filename: {selectedFile.name}</p>
-					<p>Filetype: {selectedFile.type}</p>
-					<p>Size in bytes: {selectedFile.size}</p>
-					<p>
-						lastModifiedDate:{' '}
-						{selectedFile.lastModifiedDate.toLocaleDateString()}
-					</p>
-				</div>
-			) : (
-				<p>Select a file to show details</p>
-			)}
-			<div>
-				<button onClick={handleSubmission}>Submit</button>
-			</div>
-		</div>
-                    <label htmlFor="skills">skills:</label>
-                    <textarea id="skills" name="skills" value={profile.skills} onChange={changeFormState} />
-                   
-                    <button type="submit"
-                        onClick={evt => {
-                            // Prevent form from being submitted
-                            evt.preventDefault()
+                    created ?
+                        [<div className="ProfileContainer"><h1>{resume.resume}</h1>, <p>{resume.skills}</p></div>]
+                        :
+                        <section  className="ProfileFormContainer animate__animated animate__zoomIn">
+                            <form className="ProfileForm">
+                                <input type="file" id="resume_image" onChange={createResumeImageString} />
+                                <input type="hidden" name="resume_id" value={user} />
+                                <div className="skillsContainer">
+                                    {
+                                        skills.map((obj) => { return <> <div className="skills"><label htmlFor="skills">{obj.skill}</label> <input type="checkbox" id="postSkills" name="skills" value={obj.skill} onClick={changeFormState} /></div> </> })
+                                    }
+                                </div>
 
-                            const formData = new FormData();
 
-		                    formData.append('File', selectedFile);
+                                <button type="submit"
+                                    onClick={evt => {
+                                        // Prevent form from being submitted
+                                        evt.preventDefault()
 
-                            const resume = {
-                                resume: profile.resume,
-                                skills: profile.skills
-                            }
 
-                            // Send POST request to your API
-                            createResume(resume)
-                                .then(() => history.push("/profile"))
-                        }}
-                        className="btn btn-primary">Create</button>
-                </form>
-            </section>
-            }
+                                        const resume = {
+                                            applicant: user,
+                                            resume: profile.resume,
+                                            skills: profile.skills
+                                        }
+
+                                        // Send POST request to your API
+                                        createResume(resume)
+                                            .then(() => history.push("/"))
+                                    }}
+                                    className="PostButton">Create</button>
+                            </form>
+                        </section>
+                }
+            </div>
         </>
 
     )

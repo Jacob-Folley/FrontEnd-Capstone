@@ -1,0 +1,45 @@
+.PostFormContainer {
+    width: 60%;
+    margin-top: 5%;
+    margin-left: 18%;
+    padding: 2%;
+    border: .75px solid rgb(119, 189, 73);
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+}
+
+.PostForm {
+    display: flex;
+    flex-direction: column;
+}
+
+#jobtitle {
+    display: flex;
+    align-self: center;
+    width: 50%;
+    padding: .5%;
+    margin-bottom: 2%;
+}
+
+#jobdescription {
+    height: 60vh;
+    width: 80%;
+    align-self: center;
+    margin-bottom: 2%;
+}
+
+.skillsContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.skills {
+    display: flex;
+    justify-content: flex-start;
+    margin-right: 3%;
+}
+
+.PostButton {
+    width: 50%;
+    align-self: center;
+    margin-top: 2%;
+}

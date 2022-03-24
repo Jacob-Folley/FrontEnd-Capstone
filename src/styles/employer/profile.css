@@ -1,0 +1,56 @@
+.ProfileContainer {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    margin-left: 18%;
+    margin-top: 8%;
+    border: .75px solid rgb(119, 189, 73);
+    padding: 2%;
+    justify-content: center;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+}
+
+.ProfileTitle {
+    text-align: center;
+}
+
+.ProfileDescription {
+    text-align: center;
+}
+
+/* ------------------------------------------------- */
+
+.ProfileFormContainer {
+    display: flex;
+    width: 60%;
+    border: .75px solid rgb(119, 189, 73);
+    margin-top: 8%;
+    margin-left: 18%;
+    padding: 2%;
+    justify-content: center;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+}
+
+.ProfileForm {
+    display: flex;
+    flex-direction: column;
+}
+
+.ProfileLabel {
+    text-align: center;
+    margin-bottom: 1%;
+}
+
+#ProfileDescriptionLabel{
+    margin-top: 5%;
+}
+
+#companyName {
+    height: 3vh;
+    width: 30vw;
+}
+
+#description {
+    height: 40vh;
+    padding: 3%;
+}

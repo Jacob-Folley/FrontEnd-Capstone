@@ -1,0 +1,27 @@
+.PostingsContainer {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    margin-top: 5%;
+    margin-left: 18%;
+    padding: 1%;
+    justify-content: center;
+}
+
+.PostingContainer {
+    border: .75px solid rgb(119, 189, 73);
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+    padding: 2%;
+    margin-top: 2%;
+}
+
+.PostingsButton {
+    margin-top: 1%;
+    width: 5vw;
+}
+
+.PostingsDeleteEdit {
+    display: flex;
+    justify-content: flex-end;
+}
+

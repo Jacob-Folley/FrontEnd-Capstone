@@ -16,7 +16,7 @@
 
 
 .appName {
-   color: var(--color-1);
+   color: rgb(119, 189, 73);
    font-size: 1em;
    cursor: pointer;
 }
@@ -36,7 +36,7 @@
     height: 3vh;  
     align-self: center; 
     width: 3vh; 
-    background-color: var(--buttons);
+    background-color: rgb(203, 218, 194);
     color: var(--color-1);
     cursor: pointer;
 }
@@ -120,7 +120,7 @@
     height: auto;
     max-height: 70vh;
     margin-top: 45%;
-    background: var(--card-body);
+    background: rgb(203, 218, 194);
     color: var(--color-1);
     border-radius: 4px;
     padding: 10%;

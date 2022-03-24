@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react"
-import { useHistory } from "react-router-dom"
+import { useHistory, useParams } from "react-router-dom"
 import { getSkills, createSkill } from "../fetches/skills"
-import { createJobPosting } from "../fetches/jobpostings"
-import "animate.css"
+import { getJobPost, updateJobPost } from "../fetches/jobpostings"
+import 'animate.css'
 
-export const EmployerPost = () => {
+export const EditEmployerPost = () => {
     const history = useHistory()
+    const { postId } = useParams()
+
     // Use States
     //-------------------------------------------------------------------------------------------------------------------
 
     const [skills, setSkills] = useState([])
-    const [newSkill, setNewSkill] = useState({
-        skill: ""
-    })
     const [posting, setPosting] = useState({
         title: "",
         description: "",
         skills: []
     })
+    const [jobpost, setJobPost] = useState([])
 
     // Use Effects
     //-------------------------------------------------------------------------------------------------------------------
@@ -32,30 +32,29 @@ export const EmployerPost = () => {
         []
     )
 
+    useEffect(
+        () => {
+            getJobPost(postId)
+                .then((data) => {
+                    setJobPost(data)
+                })
+        },
+        []
+    )
+
 
     // Functions/Objects
     //-------------------------------------------------------------------------------------------------------------------
     const changeFormState = (domEvent) => {
         const copy = { ...posting }
-        const check = posting.skills.find((obj) => {
-            return obj == domEvent.target.value
-        })
-
-        if (check){
-            const num = posting.skills.indexOf(check)
-            copy[domEvent.target.name].splice(num, 1)
-        } else {
+        if (domEvent.target.name == "skills") {
             copy[domEvent.target.name].push(domEvent.target.value)
+        }
+        else {
+            copy[domEvent.target.name] = domEvent.target.value
         }
 
         setPosting(copy)
-    }
-
-    const changeSkillState = (domEvent) => {
-        const copy = { ...newSkill }
-        copy[domEvent.target.name] = domEvent.target.value
-
-        setNewSkill(copy)
     }
 
 
@@ -65,8 +64,8 @@ export const EmployerPost = () => {
         <>
             <div className="PostFormContainer animate__animated animate__zoomIn">
                 <form className="PostForm">
-                    <input type="text" id="jobtitle" name="title" defaultValue={posting.title} onChange={changeFormState} placeholder="Job Title: "/>
-                    <textarea id="jobdescription" name="description" defaultValue={posting.description} onChange={changeFormState} placeholder="Job Description: " />
+                    <input type="text" id="jobtitle" name="title" defaultValue={jobpost.title} onChange={changeFormState} placeholder="Job Title: " />
+                    <textarea id="jobdescription" name="description" defaultValue={jobpost.description} onChange={changeFormState} placeholder="Job Description: " />
                     <div className="skillsContainer">
                     {
                         skills.map((obj) => { return <> <div className="skills"><label htmlFor="skills">{obj.skill}</label> <input type="checkbox" id="postSkills" name="skills" defaultValue={obj.skill} onClick={changeFormState} /></div> </>})
@@ -78,35 +77,19 @@ export const EmployerPost = () => {
                             evt.preventDefault()
 
                             const jobposting = {
+                                id: jobpost.id,
                                 title: posting.title,
                                 description: posting.description,
                                 skills: posting.skills
                             }
 
                             // Send POST request to your API
-                            createJobPosting(jobposting)
+                            updateJobPost(jobposting)
                                 .then(() => history.push("/postings"))
                         }}
                         className="PostButton">Create</button>
                 </form>
             </div>
-
-            {/* <label htmlFor="addSkill">Add Skill:</label>
-            <input type="text" id="addSkill" name="skill" value={newSkill.skill} onChange={changeSkillState} />
-            <button type="submit"
-                        onClick={evt => {
-                            // Prevent form from being submitted
-                            evt.preventDefault()
-
-                            const newskill = {
-                                skill: newSkill.skill
-                            }
-
-                            // Send POST request to your API
-                            createSkill(newSkill)
-                                .then(() => history.push("/post"))
-                        }}
-                        className="btn btn-primary">Create</button> */}
         </>
 
     )

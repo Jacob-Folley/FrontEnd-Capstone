@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useParams, useHistory } from "react-router-dom"
 import { createCompany, getCompany, getCompanies } from "../fetches/company"
+import "animate.css"
 
 export const EmployerProfile = () => {
     const history = useHistory()
@@ -45,7 +46,7 @@ export const EmployerProfile = () => {
 
     useEffect(
         () => {
-            if (companyProfile.id) {
+            if (companyProfile?.id) {
                 getCompany(companyProfile.id)
                     .then((data) => {
                         setCompany(data)
@@ -71,17 +72,27 @@ export const EmployerProfile = () => {
 
     return (
         <>
-            <h1>Employer Profile</h1>
             {
 
-                company ?
-                    [<h1>{company.name}</h1>, <p>{company.description}</p>]
+                company.id ?
+                    (
+                        <div className="ProfileContainer animate__animated animate__zoomIn">
+                            <h1 className="ProfileTitle animate__animated animate__pulse">{company.name}</h1>
+                            <button type="submit"
+                                onClick={evt => {
+                                    // Prevent form from being submitted
+                                    evt.preventDefault()
+                                    history.push(`/profileEdit/${company.id}`)
+                                }}
+                                className="PostingsButton">edit</button>
+                            <p className="ProfileDescription">{company.description}</p></div>
+                    )
                     :
-                    <section className="ProfileForm">
-                        <form>
-                            <label htmlFor="companyName">Company Name</label>
+                    <section className="ProfileFormContainer animate__animated animate__zoomIn">
+                        <form className="ProfileForm">
+                            <label className="ProfileLabel" htmlFor="companyName">Company Name</label>
                             <input type="text" id="companyName" name="companyName" value={profile.companyName} onChange={changeFormState} />
-                            <label htmlFor="description">Company Description:</label>
+                            <label id="ProfileDescriptionLabel" className="ProfileLabel" htmlFor="description">Company Description:</label>
                             <textarea id="description" name="description" value={profile.description} onChange={changeFormState} />
 
                             <button type="submit"
@@ -96,7 +107,7 @@ export const EmployerProfile = () => {
 
                                     // Send POST request to your API
                                     createCompany(company)
-                                        .then(() => history.push("/profile"))
+                                        .then(() => history.push("/"))
                                 }}
                                 className="btn btn-primary">Create</button>
                         </form>

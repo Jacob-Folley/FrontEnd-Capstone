@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react"
-import { useParams, useHistory } from "react-router-dom"
+import { useParams, useHistory, Link } from "react-router-dom"
 import { getJobPostings } from "../fetches/jobpostings"
 import { createApplied, getApplied } from "../fetches/applied"
+import { getAccepted } from "../fetches/accepted"
+import 'animate.css';
 
 export const ApplicantJobPosts = () => {
     const user = parseInt(localStorage.getItem("userId"))
@@ -13,6 +15,9 @@ export const ApplicantJobPosts = () => {
     const [posts, setPosts] = useState([])
     const [userApplied, setApplied] = useState([])
     const [currentApplication, setApplication] = useState([])
+    const [accepted, setAccepted] = useState([])
+    const [currentAccepted, setMyAccepted] = useState([])
+    const [search, setSearch] = useState('')
 
     // Use Effects
     //-------------------------------------------------------------------------------------------------------------------
@@ -29,10 +34,7 @@ export const ApplicantJobPosts = () => {
 
     useEffect(
         () => {
-            getApplied()
-                .then((data) => {
-                    setApplied(data)
-                })
+            appliedList()
         },
         []
     )
@@ -46,49 +48,101 @@ export const ApplicantJobPosts = () => {
         [userApplied]
     )
 
+    useEffect(
+        () => {
+            acceptedList()
+        },
+        []
+    )
+
+    useEffect(
+        () => {
+            setMyAccepted(accepted.filter((app) => {
+                return app.applicant.id == user
+            }))
+        },
+        [accepted]
+    )
+
+    useEffect(
+        () => {
+            search === "" ? getJobPostings().then((data) => { setPosts(data) }) :
+                setPosts(posts.filter((post) => {
+                    let title = post.title
+                    return title.toLowerCase().includes(search.toLowerCase())
+                }))
+
+        },
+        [search]
+    )
+
 
     // Functions/Objects
     //-------------------------------------------------------------------------------------------------------------------
+    const appliedList = () => { getApplied().then((data) => { setApplied(data) }) }
+    const acceptedList = () => { getAccepted().then((data) => { setAccepted(data) }) }
 
+    const searchFunction = () => {
+        const foundPost = posts.find((app) => {
+            let title = app.title
+            return title === search
+        })
+    }
 
 
     //-------------------------------------------------------------------------------------------------------------------
 
     return (
         <>
-            <h1>Applicant Job Posts</h1>
+            <div className="searchContainer animate__animated animate__fadeInDown">
+
+                <input className="searchBar" onChange={(e) => {
+                    const searchItem = e.target.value
+                    setSearch(searchItem);
+                }} type="text" placeholder="search..."></input>
+                <button className="submit" type="submit" onClick={() => { searchFunction() }}>go</button>
+
+            </div>
             {
                 posts.map((post) => {
-                    const found = currentApplication.find((obj) => {
+                    const foundApplied = currentApplication.find((obj) => {
+                        return post.id == obj.posting.id
+                    })
+                    const foundAccepted = currentAccepted.find((obj) => {
                         return post.id == obj.posting.id
                     })
                     return (
                         <>
-                            {found ? ""
-                            :
-                            <>
-                                <h2>{post.title}</h2>
-                                <p>{post.description}</p>
-                                <p></p>
-                                <h3>{post.employer?.username}</h3>
-                        
-                                <button type="submit"
-                                    onClick={evt => {
-                                        // Prevent form from being submitted
-                                        evt.preventDefault()
 
-                                        const apply = {
-                                            posting: post.id,
-                                            applicant: user
-                                     }
+                            {foundApplied || foundAccepted ? ""
+                                :
+                                <>
+                                    <div className="animate__animated animate__zoomIn" id="SearchEmployerContainer">
+                                        <div className="jobTitle">
+                                            <h3 className="hyperLink" onClick={() => {history.push(`/post/${post.id}`)}}>{post.title}</h3>
+                                            <button type="submit"
+                                                onClick={evt => {
+                                                    // Prevent form from being submitted
+                                                    evt.preventDefault()
 
-                                        // Send POST request to your API
-                                        createApplied(apply)
-                                            .then(() => history.push("/postings")) //REFRESH PAGE AFTER APPLY
-                                    }}
-                                    className="btn btn-primary">apply</button>
-                                    </>
-                                }
+                                                    const apply = {
+                                                        posting: post.id,
+                                                        applicant: user
+                                                    }
+
+                                                    // Send POST request to your API
+                                                    createApplied(apply)
+                                                        .then(appliedList)
+                                                    // .then(() => history.push("/postings")) //REFRESH PAGE AFTER APPLY
+                                                }}
+                                                className="applyButton">apply</button>
+                                        </div>
+                                        <p onClick={() => {history.push(`/companyprofile/${post.id}`)}}>{post.employer?.username}</p>
+                                        {/* <p>{post.description}</p> */}
+                                        <p></p>
+                                    </div>
+                                </>
+                            }
                         </>
                     )
                 })

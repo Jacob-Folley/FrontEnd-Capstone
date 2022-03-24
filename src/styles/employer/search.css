@@ -1,0 +1,32 @@
+.searchContainer {
+    display: flex; 
+    justify-content: center;
+    margin-top: 5%;
+}
+
+.searchBar {
+    width: 20vw;
+    height: 1vh;
+    padding: 1%;
+    border: .75px solid rgb(119, 189, 73);
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+}
+
+.submit {
+    background-color: white;
+    color: black;
+    border: .75px solid rgb(119, 189, 73);
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+}
+
+.SearchAppContainer {
+    margin-top: 2%;
+    width: 60%;
+    margin-left: 20%;
+    border: .75px solid rgb(119, 189, 73);
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+}
+
+#SearchAppName {
+    text-align: center;
+}

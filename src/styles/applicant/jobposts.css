@@ -1,0 +1,27 @@
+#SearchEmployerContainer {
+    margin-top: 2%;
+    width: 60%;
+    margin-left: 20%;
+    border: .75px solid rgb(119, 189, 73);
+    padding: 1%;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+}
+
+.jobTitle {
+    display: flex; 
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: -4%;
+}
+
+.applyButton {
+   
+}
+
+.hyperLink {
+    cursor: pointer
+}
+
+.hyperLink:hover {
+    color: rgb(119, 189, 73)
+}

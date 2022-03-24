@@ -3,6 +3,7 @@ import { useHistory, useParams } from "react-router-dom"
 import { deleteApplied } from "../fetches/applied"
 import { getJobPostings } from "../fetches/jobpostings"
 import { createAccepted, getAccepted } from "../fetches/accepted"
+import 'animate.css'
 
 export const EmployerApplicants = () => {
     const user = parseInt(localStorage.getItem("userId"))
@@ -18,10 +19,7 @@ export const EmployerApplicants = () => {
     //-------------------------------------------------------------------------------------------------------------------
     useEffect(
         () => {
-            getJobPostings()
-                .then((data) => {
-                    setJobPostings(data)
-                })
+            jobPosts()
         },
         []
     )
@@ -39,10 +37,7 @@ export const EmployerApplicants = () => {
 
     useEffect(
         () => {
-            getAccepted()
-                .then((data) => {
-                    setAccepted(data)
-                })
+            accpetedPosts()
         },
         []
     )
@@ -51,7 +46,7 @@ export const EmployerApplicants = () => {
         () => {
             if (accepted.length > 0) {
                 setMyAccepted(accepted.filter((post) => {
-                    return post.posting?.employer == user
+                    return post.posting?.employer?.id == user
                 }))
             }
         },
@@ -61,78 +56,94 @@ export const EmployerApplicants = () => {
 
     // Functions/Objects
     //-------------------------------------------------------------------------------------------------------------------
-
+    const jobPosts = () => { getJobPostings().then((data) => { setJobPostings(data) }) }
+    const accpetedPosts = () => { getAccepted().then((data) => { setAccepted(data) }) }
 
     //-------------------------------------------------------------------------------------------------------------------
 
     return (
         <>
-            <h1>Employer Applicants</h1>
+            <div className="AppContainer">
+                {
+                    myposts.map((post) => {
+                        return (
+                            <>
+                                <div className="ApplicantsContainer animate__animated animate__zoomIn">
+                                    <h2 className="ApplicantTitle">{post.title}</h2>
+                                    <div className="ApplicantsAppAccContainer">
+                                        <div className="ApplicantsApplied">
+                                            <h3>Applied</h3>
+                                            {
+                                                post.applications.map((app) => {
+                                                    console.log(app)
+                                                    return (
+                                                        <>
+                                                            {
+                                                                (app.applicant.isRejected || app.applicant.isAccepted) ? ""
+                                                                    :
+                                                                    <>
+                                                                        <p className="hyperLink" onClick={() => {history.push(`/applicant/${app.id}`)}}>{app.applicant.first_name + " " + app.applicant.last_name}</p>
+                                                                        <button type="submit"
+                                                                            onClick={evt => {
+                                                                                // Prevent form from being submitted
+                                                                                evt.preventDefault()
 
-            {
-                myposts.map((post) => {
-                    return (
-                        <>
-                            <h2>{post.title}</h2>
-                            <h3>Applied</h3>
-                            {
-                                post.applications.map((app) => {
-                                    console.log(app)
-                                    return (
-                                        <>
-                                        {
-                                            (app.applicant.isRejected || app.applicant.isAccepted) ? ""
-                                                :
-                                                <>
-                                                    <p>{app.applicant.first_name + " " + app.applicant.last_name}</p>
-                                                    <button type="submit"
-                                                        onClick={evt => {
-                                                            // Prevent form from being submitted
-                                                            evt.preventDefault()
+                                                                                const accepted = {
+                                                                                    posting: post.id,
+                                                                                    applicant: app.applicant.id
+                                                                                }
 
-                                                            const accepted = {
-                                                                posting: post.id,
-                                                                applicant: app.applicant.id
+                                                                                // Send POST request to your API
+                                                                                createAccepted(accepted)
+                                                                                    .then(accpetedPosts)
+                                                                                    .then(() => deleteApplied(app.id))
+                                                                                    .then(jobPosts)
+                                                                                // .then(() => {history.push("/applicants")}) //REFRESH PAGE AFTER APPLY
+                                                                            }}
+                                                                            className="btn btn-primary">accept</button>
+
+                                                                        <button type="submit"
+                                                                            onClick={evt => {
+                                                                                // Prevent form from being submitted
+                                                                                evt.preventDefault()
+
+                                                                                // Send POST request to your API
+                                                                                deleteApplied(app.id)
+                                                                                    .then(jobPosts)
+                                                                                // .then(() => history.push("/applicants")) //REFRESH PAGE AFTER APPLY
+                                                                            }}
+                                                                            className="btn btn-primary">deny</button>
+                                                                    </>
+                                                            }
+                                                        </>
+                                                    )
+                                                })
+                                            }
+                                        </div>
+                                        <div className="ApplicantsAccepted">
+                                            <h3>Accepted</h3>
+                                            {
+                                                myAccepted.map((accept) => {
+                                                    return (
+                                                        <>
+                                                            {accept.posting.id == post.id ?
+                                                                <p className="hyperLink" onClick={() => {history.push(`/applicant/${accept.id}`)}}>{accept.applicant.first_name + " " + accept.applicant.last_name}</p>
+                                                                :
+                                                                ""
                                                             }
 
-                                                            // Send POST request to your API
-                                                            createAccepted(accepted)
-                                                                .then(() => deleteApplied(app.id))
-                                                                .then(() => {history.push("/applicants")}) //REFRESH PAGE AFTER APPLY
-                                                        }}
-                                                        className="btn btn-primary">accept</button>
-
-                                                    <button type="submit"
-                                                        onClick={evt => {
-                                                            // Prevent form from being submitted
-                                                            evt.preventDefault()
-
-                                                            // Send POST request to your API
-                                                            deleteApplied(app.id)
-                                                                .then(() => history.push("/applicants")) //REFRESH PAGE AFTER APPLY
-                                                        }}
-                                                        className="btn btn-primary">deny</button>
-                                                </>
+                                                        </>
+                                                    )
+                                                })
                                             }
-                                            </>
-                                    )
-                                })
-                            }
-                            <h3>Accepted</h3>
-                            {
-                                myAccepted.map((post) => {
-                                    return (
-                                        <>
-                                        <p>{post.applicant.first_name + " " + post.applicant.last_name}</p>
-                                        </>
-                                    )
-                                })
-                            }
-                        </>
-                    )
-                })
-            }
-
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
+                        )
+                    })
+                }
+            </div>
         </>
 
     )

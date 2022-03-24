@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useHistory } from "react-router-dom"
 import { getApplied } from "../fetches/applied"
+import "animate.css"
 
 export const ApplicantApplied = () => {
     const user = parseInt(localStorage.getItem("userId"))
-    console.log(user)
+    const history = useHistory()
     // Use States
     //-------------------------------------------------------------------------------------------------------------------
 
@@ -43,17 +44,21 @@ export const ApplicantApplied = () => {
 
     return (
         <>
-            <h1>Applicant Applied</h1>
-            {
-                myApplied.map((applied) => {
-                    return (
-                        <>
-                            <h1>{applied.posting.title}</h1>
-                            <p>{applied.posting.description}</p>
-                        </>
-                    )
-                })
-            }
+            <div className="mainContainer">
+                {
+                    myApplied.map((applied) => {
+                        return (
+                            <>
+                                <div className="ApplicantAppliedContainer animate__animated animate__zoomIn">
+                                    <h3 className="hyperLink" onClick={() => {history.push(`/post/${applied.id}`)}}>{applied.posting.title}</h3>
+                                    {/* <p>{applied.posting.description}</p> */}
+                                    <p>{applied.posting?.employer?.username}</p>
+                                </div>
+                            </>
+                        )
+                    })
+                }
+            </div>
         </>
 
     )

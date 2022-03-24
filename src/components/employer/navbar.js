@@ -91,7 +91,6 @@ export const NavBar = () => {
                 <div><Link to={`/post`}>Post</Link></div>
                 <div><Link to={`/postings`}>Postings</Link></div>
                 <div><Link to={`/applicants`}>Applicants</Link></div>
-                <div><Link to={`/`}>Profile</Link></div>
 
             </div>
 
@@ -125,6 +124,7 @@ export const NavBar = () => {
                 </button>
                 {isOpen && <Popup
                     content={<>
+                        <div><Link to={`/`}>Profile</Link></div>
                         <p onClick={() => { logout() }}>LogOut</p>
                     </>}
                     handleClose={togglePopup}

@@ -17,6 +17,15 @@ code {
 }
 
 @import './styles/navbar.css'; 
+@import './styles/employer/profile.css'; 
+@import './styles/employer/applicant.css'; 
+@import './styles/employer/post.css'; 
+@import './styles/employer/postings.css'; 
+@import './styles/employer/search.css'; 
+@import './styles/applicant/accepted.css'; 
+@import './styles/applicant/applied.css'; 
+@import './styles/applicant/jobposts.css'; 
+@import './styles/applicant/profile.css'; 
 
 :root {
   --container-dark: white;

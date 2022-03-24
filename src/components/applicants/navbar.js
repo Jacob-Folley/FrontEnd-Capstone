@@ -88,7 +88,6 @@ export const ApplicantNavBar = () => {
 
             <div className="navType">
                 <div><Link to={`/postings`}>Job Postings</Link></div>
-                <div><Link to={`/`}>Profile</Link></div>
                 <div><Link to={`/applied`}>Applied</Link></div>
                 <div><Link to={`/accepted`}>Accepted</Link></div>
 
@@ -120,10 +119,11 @@ export const ApplicantNavBar = () => {
                 </label>
 
                 <button className="listprofileButton" onClick={() => { togglePopup() }}>
-                    J
+                    
                 </button>
                 {isOpen && <Popup
                     content={<>
+                        <div><Link to={`/`}>Profile</Link></div>
                         <p onClick={() => { logout() }}>LogOut</p>
                     </>}
                     handleClose={togglePopup}
