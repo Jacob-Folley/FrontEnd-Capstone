@@ -137,7 +137,7 @@ export const ApplicantJobPosts = () => {
                                                 }}
                                                 className="applyButton">apply</button>
                                         </div>
-                                        <p onClick={() => {history.push(`/companyprofile/${post.id}`)}}>{post.employer?.username}</p>
+                                        <p className="hyperLink" onClick={() => {history.push(`/companyprofile/${post.company?.id}`)}}>{post.company?.name}</p>
                                         {/* <p>{post.description}</p> */}
                                         <p></p>
                                     </div>

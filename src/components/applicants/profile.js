@@ -20,11 +20,7 @@ export const ApplicantProfile = () => {
     const [resumes, setResumes] = useState([])
     const [applicantProfile, setApplicantProfile] = useState({})
     const [resume, setResume] = useState({})
-
-    const [selectedFile, setSelectedFile] = useState();
-    const [isFilePicked, setIsFilePicked] = useState(false);
     const [skills, setSkills] = useState([])
-    const [image, setImage] = useState({})
 
     // Use Effects
     //-------------------------------------------------------------------------------------------------------------------
@@ -43,22 +39,25 @@ export const ApplicantProfile = () => {
 
     useEffect(
         () => {
-            setApplicantProfile(findCompany())
+            if (resumes.length > 0) {
+                setApplicantProfile(resumes.find((obj) => {
+                    return obj.applicant?.id == user
+                }))
+            }
         },
-        []
+        [resumes]
     )
 
     useEffect(
         () => {
-            getResume(applicantProfile.id)
-                .then((data) => {
-                    setResume(data)
-                    if (resume.resume) {
-                        setCreated(true)
-                    }
-                })
+            if (applicantProfile?.id) {
+                getResume(applicantProfile.id)
+                    .then((data) => {
+                        setResume(data)
+                    })
+            }
         },
-        []
+        [applicantProfile]
     )
 
     useEffect(
@@ -93,13 +92,6 @@ export const ApplicantProfile = () => {
         setProfile(copy)
     }
 
-    const findCompany = () => {
-        const foundApplicant = resumes.filter((resume) => {
-            return resume.applicant?.id == user
-        })
-        return foundApplicant
-    }
-
     const getBase64 = (file, callback) => {
         const reader = new FileReader();
         reader.addEventListener('load', () => callback(reader.result));
@@ -125,8 +117,13 @@ export const ApplicantProfile = () => {
             <div className="mainContainer">
                 {
 
-                    created ?
-                        [<div className="ProfileContainer"><h1>{resume.resume}</h1>, <p>{resume.skills}</p></div>]
+                    resume.id ?
+                        (
+                            <div className="ProfileContainer">
+                                <embed src={resume.resume} width="2000px" height="5100px" type="application/pdf"/> 
+                                <p>{resume.skills}</p>
+                            </div>
+                        )
                         :
                         <section  className="ProfileFormContainer animate__animated animate__zoomIn">
                             <form className="ProfileForm">

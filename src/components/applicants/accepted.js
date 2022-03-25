@@ -42,7 +42,7 @@ export const ApplicantAccepted = () => {
                             <>
                                 <div className="ApplicantAcceptedContainer animate__animated animate__zoomIn">
                                     <h3 className="hyperLink" onClick={() => {history.push(`/post/${obj.id}`)}}>{obj.posting.title}</h3>
-                                    <p id="employerName">{obj.posting.employer?.first_name + " " + obj.posting.employer?.last_name}</p>
+                                    <p id="employerName" className="hyperLink" onClick={() => {history.push(`/companyprofile/${obj.posting?.company?.id}`)}}>{obj.posting.company?.name}</p>
                                     {/* <p>{obj.posting.description}</p> */}
                                 </div>
                             </>

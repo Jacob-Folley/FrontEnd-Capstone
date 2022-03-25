@@ -15,6 +15,7 @@ export const EditEmployerPost = () => {
     const [posting, setPosting] = useState({
         title: "",
         description: "",
+        company: "",
         skills: []
     })
     const [jobpost, setJobPost] = useState([])
@@ -48,7 +49,15 @@ export const EditEmployerPost = () => {
     const changeFormState = (domEvent) => {
         const copy = { ...posting }
         if (domEvent.target.name == "skills") {
-            copy[domEvent.target.name].push(domEvent.target.value)
+            const check = copy.skills.find((obj) => {
+                return obj == domEvent.target.value
+            })
+            if (check) {
+                const num = posting.skills.indexOf(check)
+                copy[domEvent.target.name].splice(num, 1)
+            } else {
+                copy[domEvent.target.name].push(domEvent.target.value)
+            }
         }
         else {
             copy[domEvent.target.name] = domEvent.target.value
@@ -67,9 +76,9 @@ export const EditEmployerPost = () => {
                     <input type="text" id="jobtitle" name="title" defaultValue={jobpost.title} onChange={changeFormState} placeholder="Job Title: " />
                     <textarea id="jobdescription" name="description" defaultValue={jobpost.description} onChange={changeFormState} placeholder="Job Description: " />
                     <div className="skillsContainer">
-                    {
-                        skills.map((obj) => { return <> <div className="skills"><label htmlFor="skills">{obj.skill}</label> <input type="checkbox" id="postSkills" name="skills" defaultValue={obj.skill} onClick={changeFormState} /></div> </>})
-                    }
+                        {
+                            skills.map((obj) => { return <> <div className="skills"><label htmlFor="skills">{obj.skill}</label> <input type="checkbox" id="postSkills" name="skills" defaultValue={obj.skill} onClick={changeFormState} /></div> </> })
+                        }
                     </div>
                     <button type="submit"
                         onClick={evt => {
@@ -80,6 +89,7 @@ export const EditEmployerPost = () => {
                                 id: jobpost.id,
                                 title: posting.title,
                                 description: posting.description,
+                                company: jobpost.company?.id,
                                 skills: posting.skills
                             }
 
